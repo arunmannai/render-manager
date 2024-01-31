@@ -14,7 +14,7 @@ const App = () => {
   }, []);
 
   const fetchData = () => {
-    axios("https://arunflask.onrender.com/render")
+    axios(import.meta.env.VITE_API_URL)
       .then(response => setApps(response.data));
   };
 
@@ -62,7 +62,7 @@ const App = () => {
   };
 
   const handleSubmit = () => {
-    axios.post("https://arunflask.onrender.com/render", {
+    axios.post(import.meta.env.VITE_API_URL, {
       name: selectedApp,
       key: envKey,
       value: envValue
