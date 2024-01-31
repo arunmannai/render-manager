@@ -3,11 +3,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 
 const App = () => {
-  const [selectedApp, setSelectedApp] = useState("");
-  const [input1, setInput1] = useState("");
-  const [input2, setInput2] = useState("");
-  const [apiResponse, setApiResponse] = useState("");
   const [apps, setApps] = useState([]);
+  const [selectedApp, setSelectedApp] = useState("");
+  const [envKey, setEnvKey] = useState("");
+  const [envValue, setEnvValue] = useState("");
+  const [apiResponse, setApiResponse] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -15,28 +15,25 @@ const App = () => {
 
   const fetchData = () => {
     axios("https://arunflask.onrender.com/render")
-      .then((response) => response.data)
-      .then((data) => {
-        setApps(data);
-      });
+      .then(response => setApps(response.data));
   };
 
   const handleDropdownChange = (event) => {
     setSelectedApp(event.target.value);
   };
 
-  const handleInput1Change = (event) => {
-    setInput1(event.target.value);
+  const handleEnvKeyChange = (event) => {
+    setEnvKey(event.target.value);
   };
 
-  const handleInput2Change = (event) => {
-    setInput2(event.target.value);
+  const handleEnvValueChange = (event) => {
+    setEnvValue(event.target.value);
   };
 
   const handleReset = () => {
     setSelectedApp("");
-    setInput1("");
-    setInput2("value");
+    setEnvKey("");
+    setEnvValue("");
     setApiResponse("");
   };
 
@@ -55,34 +52,47 @@ const App = () => {
   const getEnvVar = () => {
     let app = apps.find(app => app.name === selectedApp);
     if (!app) return "";
+    return displayEnvVars(app.envVar);
+  };
+
+  const displayEnvVars = (envVars) => {
     return (<ul>
-       {app.envVar.map(item => <li key={item.key}>{item.key}: {item.value}</li>)}
-    </ul>)
+      {envVars.map(item => <li key={item.key}>{item.key}: {item.value}</li>)}
+    </ul>);
   };
 
-  const handleSubmit = async () => {
-    try {
-      // Make API call using selectedOption, input1, and input2
-      const response = await fetch("https://arunflask.onrender.com/render", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ selectedApp, input1, input2 }),
-      });
-
-      // Assuming the API returns JSON data
-      const data = await response.json();
-      setApiResponse(data.message); // Set the API response in state
-    } catch (error) {
+  const handleSubmit = () => {
+    axios.post("https://arunflask.onrender.com/render", {
+      name: selectedApp,
+      key: envKey,
+      value: envValue
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      setApiResponse(response.data);
+      fetchData();
+    })
+    .catch(error => {
       console.error("Error:", error);
-      setApiResponse("Error occurred while fetching data");
-    }
+      setApiResponse("Error occurred while submitting data");
+    });
   };
+
+  if (!apps.length) {
+    return (
+      <div className="container mt-4">
+        <h2 className="heading text-center">Render Manager</h2>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-4">
-      <h2 className="heading">Render Manager</h2>
+      <h2 className="heading text-center">Render Manager</h2>
       <label htmlFor="dropdown">Select Your App:</label>
       <select
         className="form-select"
@@ -106,36 +116,33 @@ const App = () => {
         </>
       )}
 
-      <label htmlFor="input1" className="mt-3">
+      <label htmlFor="envkey" className="mt-3">
         Key:
       </label>
       <input
         type="text"
         className="form-control"
-        id="input1"
-        value={input1}
-        onChange={handleInput1Change}
+        id="envkey"
+        value={envKey}
+        onChange={handleEnvKeyChange}
       />
 
-      <label htmlFor="input2" className="mt-3">
+      <label htmlFor="envvalue" className="mt-3">
         Value:
       </label>
       <input
         type="text"
         className="form-control"
-        id="input2"
-        value={input2}
-        onChange={handleInput2Change}
+        id="envvalue"
+        value={envValue}
+        onChange={handleEnvValueChange}
       />
 
-      <button className="btn btn-secondary mt-3 me-2" onClick={handleReset}>
-        Reset
-      </button>
-      <button className="btn btn-primary mt-3" onClick={handleSubmit}>
-        Submit
-      </button>
-
-      {apiResponse && <p className="mt-3">API Response: {apiResponse}</p>}
+      <button className="btn btn-secondary mt-3 me-2" onClick={handleReset}>Reset</button>
+      <button className="btn btn-primary mt-3" onClick={handleSubmit} disabled={!selectedApp || !envKey || !envValue}>Submit</button>
+      {apiResponse && <p className="mt-3">API Response:</p>}
+      {apiResponse && Array.isArray(apiResponse) && displayEnvVars(apiResponse)}
+      {apiResponse && !Array.isArray(apiResponse) && <p>{JSON.stringify(apiResponse)}</p>}
     </div>
   );
 };
