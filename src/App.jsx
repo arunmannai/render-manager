@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
 
@@ -20,14 +20,17 @@ const App = () => {
 
   const handleDropdownChange = (event) => {
     setSelectedApp(event.target.value);
+    setApiResponse("");
   };
 
   const handleEnvKeyChange = (event) => {
     setEnvKey(event.target.value);
+    setApiResponse("");
   };
 
   const handleEnvValueChange = (event) => {
     setEnvValue(event.target.value);
+    setApiResponse("");
   };
 
   const handleReset = () => {
@@ -72,12 +75,12 @@ const App = () => {
       }
     })
     .then(response => {
-      setApiResponse(response.data);
+      setApiResponse(response.data.status);
       fetchData();
     })
     .catch(error => {
       console.error("Error:", error);
-      setApiResponse("Error occurred while submitting data");
+      setApiResponse("Error occurred");
     });
   };
 
@@ -140,9 +143,7 @@ const App = () => {
 
       <button className="btn btn-secondary mt-3 me-2" onClick={handleReset}>Reset</button>
       <button className="btn btn-primary mt-3" onClick={handleSubmit} disabled={!selectedApp || !envKey || !envValue}>Submit</button>
-      {apiResponse && <p className="mt-3">API Response:</p>}
-      {apiResponse && Array.isArray(apiResponse) && displayEnvVars(apiResponse)}
-      {apiResponse && !Array.isArray(apiResponse) && <p>{JSON.stringify(apiResponse)}</p>}
+      {apiResponse && <p className="mt-3">{apiResponse}</p>}
     </div>
   );
 };
