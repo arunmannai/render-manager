@@ -119,7 +119,7 @@ const App = () => {
           ))}
         </Select>
         {selectedApp && (<FormHelperText>{getRepo()} ({getBranch()})</FormHelperText>)}
-        {selectedApp && getEnvVars().length && (<FormHelperText>{displayEnvVars(getEnvVars())}</FormHelperText>)}
+        {selectedApp && getEnvVars().length > 0 && (<FormHelperText>{displayEnvVars(getEnvVars())}</FormHelperText>)}
       </FormControl>
 
       <TextField
