@@ -8,6 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const App = () => {
   const [apps, setApps] = useState([]);
@@ -93,7 +94,7 @@ const App = () => {
     return (
       <div className="container mt-4">
         <h2 className="heading text-center">Render Manager</h2>
-        <p>Loading...</p>
+        <div className="text-center mt-5 pt-5"><CircularProgress /></div>
       </div>
     );
   }
