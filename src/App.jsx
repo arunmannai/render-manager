@@ -59,16 +59,14 @@ const App = () => {
     return app.branch;
   };
 
-  const getEnvVar = () => {
+  const getEnvVars = () => {
     let app = apps.find(app => app.name === selectedApp);
-    if (!app) return "";
-    return displayEnvVars(app.envVar);
+    if (!app) return [];
+    return app.envVar;
   };
 
   const displayEnvVars = (envVars) => {
-    return (<ul>
-      {envVars.map(item => <li key={item.key}>{item.key}: {item.value}</li>)}
-    </ul>);
+    return envVars.map(item => <span key={item.key}>{item.key}: {item.value}<br /></span>);
   };
 
   const handleSubmit = () => {
@@ -103,7 +101,7 @@ const App = () => {
 
   return (
     <div className="container mt-4">
-      <h2 className="heading text-center">Render Manager</h2>
+      <h2 className="heading text-center mb-4">Render Manager</h2>
 
       <FormControl variant="filled" fullWidth>
         <InputLabel id="dropdown-label">Select Your App</InputLabel>
@@ -120,7 +118,7 @@ const App = () => {
           ))}
         </Select>
         {selectedApp && (<FormHelperText>{getRepo()} ({getBranch()})</FormHelperText>)}
-        {selectedApp && (<FormHelperText>{getEnvVar()}</FormHelperText>)}
+        {selectedApp && getEnvVars().length && (<FormHelperText>{displayEnvVars(getEnvVars())}</FormHelperText>)}
       </FormControl>
 
       <TextField
