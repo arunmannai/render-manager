@@ -120,9 +120,8 @@ const App = () => {
           ))}
         </Select>
         {selectedApp && (<FormHelperText>{getRepo()} ({getBranch()})</FormHelperText>)}
+        {selectedApp && (<FormHelperText>{getEnvVar()}</FormHelperText>)}
       </FormControl>
-
-      {selectedApp && getEnvVar()}
 
       <TextField
         id="envkey"
