@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
 import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import FormHelperText from '@mui/material/FormHelperText';
+
 
 const App = () => {
   const [apps, setApps] = useState([]);
@@ -94,31 +100,29 @@ const App = () => {
     );
   }
 
+
   return (
     <div className="container mt-4">
       <h2 className="heading text-center">Render Manager</h2>
-      <label htmlFor="dropdown">Select Your App:</label>
-      <select
-        className="form-select"
-        id="dropdown"
-        onChange={handleDropdownChange}
-        value={selectedApp}
-      >
-        <option value=""></option>
-        {apps.map((app) => (
-          <option value={app.name} key={app.name}>
-            {app.name}
-          </option>
-        ))}
-      </select>
-      {selectedApp && (
-        <>
-          <p>
-            {getRepo()} ({getBranch()})
-          </p>
-          {getEnvVar()}
-        </>
-      )}
+
+      <FormControl variant="filled" fullWidth>
+        <InputLabel id="dropdown-label">Select Your App</InputLabel>
+        <Select
+          labelId="dropdown-label"
+          value={selectedApp}
+          label="Select Your App"
+          onChange={handleDropdownChange}
+        >
+          {apps.map((app) => (
+            <MenuItem value={app.name} key={app.name}>
+              {app.name}
+            </MenuItem>
+          ))}
+        </Select>
+        {selectedApp && (<FormHelperText>{getRepo()} ({getBranch()})</FormHelperText>)}
+      </FormControl>
+
+      {selectedApp && getEnvVar()}
 
       <TextField
         id="envkey"
@@ -138,8 +142,16 @@ const App = () => {
         onChange={handleEnvValueChange}
       />
 
-      <button className="btn btn-secondary mt-3 me-2" onClick={handleReset}>Reset</button>
-      <button className="btn btn-primary mt-3" onClick={handleSubmit} disabled={!selectedApp || !envKey || !envValue}>Submit</button>
+      <button className="btn btn-secondary mt-3 me-2" onClick={handleReset}>
+        Reset
+      </button>
+      <button
+        className="btn btn-primary mt-3"
+        onClick={handleSubmit}
+        disabled={!selectedApp || !envKey || !envValue}
+      >
+        Submit
+      </button>
       {apiResponse && <p className="mt-3">{apiResponse}</p>}
     </div>
   );
