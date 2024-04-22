@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
+import TextField from '@mui/material/TextField';
 
 const App = () => {
   const [apps, setApps] = useState([]);
@@ -119,25 +120,21 @@ const App = () => {
         </>
       )}
 
-      <label htmlFor="envkey" className="mt-3">
-        Key:
-      </label>
-      <input
-        type="text"
-        className="form-control"
+      <TextField
         id="envkey"
+        label="Key"
         value={envKey}
+        variant="filled"
+        className="form-control mt-3"
         onChange={handleEnvKeyChange}
       />
 
-      <label htmlFor="envvalue" className="mt-3">
-        Value:
-      </label>
-      <input
-        type="text"
-        className="form-control"
+      <TextField
         id="envvalue"
+        label="Value"
         value={envValue}
+        variant="filled"
+        className="form-control mt-3"
         onChange={handleEnvValueChange}
       />
 
