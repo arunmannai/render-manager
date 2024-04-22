@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
-
+import Button from '@mui/material/Button';
 
 const App = () => {
   const [apps, setApps] = useState([]);
@@ -142,16 +142,13 @@ const App = () => {
         onChange={handleEnvValueChange}
       />
 
-      <button className="btn btn-secondary mt-3 me-2" onClick={handleReset}>
+      <Button variant="outlined" className="mt-3 me-2" onClick={handleReset}>
         Reset
-      </button>
-      <button
-        className="btn btn-primary mt-3"
-        onClick={handleSubmit}
-        disabled={!selectedApp || !envKey || !envValue}
-      >
-        Submit
-      </button>
+      </Button>
+      <Button variant="contained" className="mt-3" onClick={handleSubmit}
+        disabled={!selectedApp || !envKey || !envValue}>
+          Submit
+      </Button>
       {apiResponse && <p className="mt-3">{apiResponse}</p>}
     </div>
   );
